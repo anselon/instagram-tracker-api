@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
-  resources :photo_collections, except: [:new, :edit]
-  resources :photos, except: [:new, :edit]
+  
+  resources :photo_collections, except: [:new, :edit] do
+    resources :photos, except: [:new, :edit], shallow: true
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

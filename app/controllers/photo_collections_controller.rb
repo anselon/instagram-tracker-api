@@ -6,15 +6,14 @@ class PhotoCollectionsController < ApplicationController
   def index
     @photo_collections = PhotoCollection.all
 
-    render json: @photo_collections
+    render json: @photo_collections, :callback => params[:callback]
   end
 
   # GET /photo_collections/1
   # GET /photo_collections/1.json
   def show
-    photos = @photo_collection.photos.page params[:page]
-    #Kaminari.paginate_array(@photo_collection.photos).page(params[:page]).per(10)
-    render json: photos, :callback => params[:callback]
+    @photo_collection = PhotoCollection.find(params[:id])
+    render json: @photo_collection, :callback => params[:callback]
   end
 
   # POST /photo_collections
@@ -23,11 +22,12 @@ class PhotoCollectionsController < ApplicationController
     @photo_collection = PhotoCollection.new(photo_collection_params)
 
     if @photo_collection.save
-     
-      render json: @photo_collection, status: :created, location: @photo_collection
       @photo_collection.fetch_and_save_photos
+      render json: @photo_collection, status: :created, location: @photo_collection, :callback => params[:callback]
+  
+
     else
-      render json: @photo_collection.errors, status: :unprocessable_entity
+      render json: @photo_collection.errors, status: :unprocessable_entity, :callback => params[:callback]
     end
   end
 

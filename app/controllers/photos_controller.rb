@@ -1,18 +1,19 @@
 class PhotosController < ApplicationController
   before_action :set_photo, only: [:show, :update, :destroy]
-
-  # GET /photos
-  # GET /photos.json
+  before_filter :load_collection
+  # GET /photo_collection/1/photos
+  # GET /photo_collection/1/photos.json
   def index
-    @photos = Photo.all
-
-    render json: @photos
+   
+    @photos = @photo_collection.photos.page params[:page]
+    response.headers["X-total"] = @photos.total_count.to_s
+    render json: @photos, :callback => params[:callback]
   end
 
   # GET /photos/1
   # GET /photos/1.json
   def show
-    render json: @photo
+    render json: @photo_collection.photos.find(params[:id])
   end
 
   # POST /photos
@@ -49,6 +50,12 @@ class PhotosController < ApplicationController
 
   private
 
+    def load_collection
+       @photo_collection = PhotoCollection.find(params[:photo_collection_id])
+     end
+
+
+
     def set_photo
       @photo = Photo.find(params[:id])
     end
@@ -56,4 +63,5 @@ class PhotosController < ApplicationController
     def photo_params
       params.require(:photo).permit(:username, :src_link, :native_link)
     end
+
 end
