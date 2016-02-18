@@ -6,8 +6,9 @@ clone the repo
 
 This application only has an API interface
 base url: https://intense-plains-15719.herokuapp.com/ 
-GET /photo_collections
-POST /photo_collections 
-  json: {photo_collection : { tag : <tag>, start_date: <start_date> , end_date: <end_date>}}
-GET /photo_collection/:id
-GET /photo_collection/:id/photos
+
+- GET /photo_collections
+- POST /photo_collections 
+    JSON: {photo_collection : { tag : <tag>, start_date: <start_date> , end_date: <end_date>}}
+- GET /photo_collection/:id
+- GET /photo_collection/:id/photos
