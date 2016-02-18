@@ -6,7 +6,7 @@ require 'rack/cors'
 
  Rails.application.config.middleware.insert_before 0, "Rack::Cors" do
    allow do
-     origins 'blooming-waters-27559.herokuapp.com'
+     origins 'blooming-waters-27559.herokuapp.com', 'localhost:5000'
 
      resource '*',
        headers: :any,
