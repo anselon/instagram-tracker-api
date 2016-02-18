@@ -52,7 +52,7 @@ class PhotosController < ApplicationController
 
     def load_collection
        @photo_collection = PhotoCollection.find(params[:photo_collection_id])
-     end
+    end
 
 
 
