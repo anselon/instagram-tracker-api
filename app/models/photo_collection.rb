@@ -10,34 +10,32 @@ class PhotoCollection < ActiveRecord::Base
     
     #while !(next_max_tag_id.to_s.empty?) do
 
-    10.times do
+    15.times do
       instagrams.each do |media_item|
 
-        username = media_item.caption.from.username
-        src_link = media_item.images.standard_resolution.url
+        username = media_item.user.username 
+        src_link = media_item.images.low_resolution.url
         native_link = media_item.link
-        #check if hashtag is in caption 
-        tag_time = Time.now
+  
+        tag_time = Time.at(media_item.created_time.to_i).utc.getlocal
 
-        if !(media_item.caption.text =~  /#{Regexp.quote(self[:tag])}/i).nil?
-   
-          tag_time = Time.at(media_item.created_time.to_i)
-   
-        else
+        #if hashtag not in caption get new tag_time
+        if (media_item.caption)&&(media_item.caption.text =~  /#{Regexp.quote(self[:tag])}/i).nil?
           #get comment with hash tag
           comments = Instagram.media_comments(media_item.id)
+    
           comments.each do |comment|
 
             if !(comment.text =~  /#{Regexp.quote(self[:tag])}/i).nil?
 
-              tag_time = Time.at(comment.created_time.to_i)
+              tag_time = Time.local(comment.created_time.to_i).utc.getlocal
             end
           end
         end
 
 
 
-        if tag_time <= self[:end_date] and tag_time >= self[:start_date]
+        if tag_time <= self[:end_date].getlocal and tag_time >= self[:start_date].getlocal
           #add photo to collection if unique 
           @photo = Photo.find_by(:native_link => native_link)
           if @photo.nil?

@@ -24,6 +24,7 @@ class PhotoCollectionsController < ApplicationController
     if @photo_collection.save
       @photo_collection.fetch_and_save_photos
       render json: @photo_collection, status: :created, location: @photo_collection, :callback => params[:callback]
+
   
 
     else
