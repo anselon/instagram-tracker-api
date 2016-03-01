@@ -12,3 +12,12 @@ base url: https://intense-plains-15719.herokuapp.com/
     JSON: {photo_collection : { tag : <tag>, start_date: <start_date> , end_date: <end_date>}}
 - GET /photo_collection/:id
 - GET /photo_collection/:id/photos
+
+
+About 
+
+This application tracks hashtags on Instagram between a given start date and end date, creating collections of photos for each tag. I created Rails API to handle searching for relevant photos using the Instagram API and putting them in the Postgres Database. It’s hosted on Heroku at https://intense-plains-15719.herokuapp.com/.
+
+I implemented this with nested routing and a many-to-many relationship using Rails’ has_many , :through notation. I chose this structure because it allows you to store additional information in the join table. Therefore, I created a join table called taggings that assigned photos to photo_collections and also stored the tag_time for each assignment. Since the same photos could hypothetically be in more than one collection, I added an index to the photo table to ensure they were unique based on their native instagram url. 
+
+The next steps on the backend would be to improve the REST API experience and create a more accurate tracking system. Currently, the application takes at least 30 seconds to respond to POST request. This is because when the app receives a new collection request, it searches a set number of pages from the instagram api and adds those to the database if they are within the given date range. Then it returns a 201 created. Ideally, the application would instead use Rails Active Job to queue a job that would later process the photos. Thus, the application could respond immediately after the collection is created instead of waiting for the photos to be fetched, and allow more photos to be fetched without requiring the client to wait. 
